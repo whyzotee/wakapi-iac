@@ -45,3 +45,6 @@ terraform.rc
 
 # Ignore secret startup script
 startup.sh
+
+# Ignore lock file
+.terraform.lock.hcl
