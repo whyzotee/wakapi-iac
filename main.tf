@@ -1,20 +1,14 @@
-resource "google_compute_instance" "vm_instance" {
-  name = "terraform-instance"
-  machine_type = "e2-micro"
-
-  boot_disk {
-    initialize_params {
-      image = "debian-cloud/debian-11"
-    }
-  }
-
-  network_interface {
-    network = "default"
-    access_config {}
-  }
+module "compute" {
+  source             = "./modules/compute"
+  network_default    = "projects/${var.project_id}/global/networks/default"
+  startup_script_url = module.storage.gcloud_storage_start_script_url
+  # wakapi_vpc_id = module.network.wakapi_vpc_id
 }
 
-resource "google_compute_network" "vpc_network" {
-  name  = "terraform-network"
-  auto_create_subnetworks = "true"
+# module "network" {
+#   source = "./modules/network"
+# }
+
+module "storage" {
+  source = "./modules/storage"
 }

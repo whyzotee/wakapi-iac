@@ -36,5 +36,12 @@ override.tf.json
 .terraformrc
 terraform.rc
 
+# Ignore all json file without settings
 *.json
-variables.tf
+!settings.json
+
+# Ignore secret variables
+/variables.tf
+
+# Ignore secret startup script
+startup.sh

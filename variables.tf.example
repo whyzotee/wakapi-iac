@@ -1,0 +1,20 @@
+variable "project_id" {
+  type        = string
+  description = "GCP Project ID"
+}
+
+variable "region" {
+  type        = string
+  description = "GCP region"
+}
+
+variable "zone" {
+  type        = string
+  description = "GCP zone"
+}
+
+variable "credentials_file" {
+  type        = string
+  sensitive   = true
+  description = "Path to GCP credentials JSON"
+}
