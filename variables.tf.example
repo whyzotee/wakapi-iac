@@ -18,3 +18,8 @@ variable "credentials_file" {
   sensitive   = true
   description = "Path to GCP credentials JSON"
 }
+
+variable "service_account" {
+  type        = string
+  description = "Google Service Account email."
+}

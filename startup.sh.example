@@ -1,7 +1,10 @@
 #! /bin/bash
 
-sudo apt-get update
-sudo apt-get install nginx unzip -y
+apt-get update
+apt-get install nginx unzip -y
+
+mkdir opt/wakapi && cd $_
+
 curl -L https://wakapi.dev/get | bash
 
-# ทำไงต่อไม่บอกหรอกทำเองอิอิ
+echo "ไม่บอก หลอกให้งง"
