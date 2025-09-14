@@ -1,5 +1,5 @@
 resource "google_compute_autoscaler" "default" {
-  name   = "my-autoscaler"
+  name   = "wakapi-autoscaler"
   zone   = "us-west1-a"
   target = google_compute_instance_group_manager.wakapi_mig.id
 
@@ -59,6 +59,11 @@ resource "google_compute_instance_group_manager" "wakapi_mig" {
 
   version {
     instance_template = google_compute_instance_template.wakapi_template.self_link
+  }
+
+  named_port {
+    name = "http"
+    port = "80"
   }
 }
 
