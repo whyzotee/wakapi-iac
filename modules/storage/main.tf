@@ -10,9 +10,9 @@ resource "google_storage_bucket_object" "default" {
   bucket = google_storage_bucket.bucket.id
 }
 
-resource "google_storage_bucket_iam_member" "member" {
-  provider = google
-  member   = "allUsers"
-  role     = "roles/storage.objectViewer"
-  bucket   = google_storage_bucket.bucket.name
-}
+# resource "google_storage_bucket_iam_member" "member" {
+#   provider = google
+#   member   = "allUsers"
+#   role     = "roles/storage.objectViewer"
+#   bucket   = google_storage_bucket.bucket.name
+# }

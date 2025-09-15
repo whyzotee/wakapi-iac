@@ -24,11 +24,6 @@ resource "google_compute_instance_template" "wakapi_template" {
   can_ip_forward       = false
   instance_description = "description assigned to instances"
 
-  scheduling {
-    automatic_restart   = true
-    on_host_maintenance = "MIGRATE"
-  }
-
   disk {
     source_image = "debian-cloud/debian-12"
     auto_delete  = true
@@ -38,6 +33,7 @@ resource "google_compute_instance_template" "wakapi_template" {
   network_interface {
     network    = var.wakapi_vpc_id
     subnetwork = var.wakapi_vpc_subnet
+    access_config {}
   }
 
   metadata = {
