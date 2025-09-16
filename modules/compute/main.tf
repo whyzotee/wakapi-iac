@@ -66,7 +66,7 @@ resource "google_compute_instance_group_manager" "wakapi_mig" {
 resource "google_compute_instance_group" "unmanaged" {
   name    = "un-mig"
   zone    = "us-west1-a"
-  network = var.network_default
+  network = var.default_network
 
   instances = [google_compute_instance.wakapi_unmagend_instance.id]
 
@@ -100,5 +100,10 @@ resource "google_compute_instance" "wakapi_unmagend_instance" {
   network_interface {
     network    = var.wakapi_vpc_id
     subnetwork = var.wakapi_vpc_subnet
+  }
+
+  service_account {
+    email  = var.service_account
+    scopes = ["cloud-platform"]
   }
 }

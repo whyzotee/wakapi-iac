@@ -1,4 +1,4 @@
-variable "network_default" {
+variable "default_network" {
   type        = string
   description = "default network url"
 }
