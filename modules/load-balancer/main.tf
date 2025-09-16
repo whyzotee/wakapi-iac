@@ -1,4 +1,4 @@
-resource "google_compute_forwarding_rule" "wakapi_lb_frontend" {
+resource "google_compute_global_forwarding_rule" "wakapi_lb_frontend" {
   name = "wakapi-frontend"
 
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -7,10 +7,16 @@ resource "google_compute_forwarding_rule" "wakapi_lb_frontend" {
   ip_version  = "IPV4"
   port_range  = "80"
 
-  backend_service = google_compute_backend_service.wakapi_backend.id
+  target     = google_compute_target_http_proxy.wakapi_lb_http_proxy.id
+  ip_address = ""
 }
 
-resource "google_compute_forwarding_rule" "wakapi_lb_frontend_ipv6" {
+resource "google_compute_target_http_proxy" "wakapi_lb_http_proxy" {
+  name    = "wakapi-lb-http-proxy"
+  url_map = google_compute_url_map.wakapi_lb.id
+}
+
+resource "google_compute_global_forwarding_rule" "wakapi_lb_frontend_ipv6" {
   name = "wakapi-frontend-ipv6"
 
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -19,7 +25,18 @@ resource "google_compute_forwarding_rule" "wakapi_lb_frontend_ipv6" {
   ip_version  = "IPV6"
   port_range  = "80"
 
-  backend_service = google_compute_backend_service.wakapi_backend.id
+  target     = google_compute_target_http_proxy.wakapi_lb_http_proxy_ipv6.id
+  ip_address = "" # ให้เอา ip จาก google
+}
+
+resource "google_compute_target_http_proxy" "wakapi_lb_http_proxy_ipv6" {
+  name    = "wakapi-lb-http-proxy-ipv6"
+  url_map = google_compute_url_map.wakapi_lb.id
+}
+
+resource "google_compute_url_map" "wakapi_lb" {
+  name            = "wakapi-lb"
+  default_service = google_compute_backend_service.wakapi_backend.id
 }
 
 resource "google_compute_backend_service" "wakapi_backend" {
@@ -31,7 +48,6 @@ resource "google_compute_backend_service" "wakapi_backend" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
   timeout_sec           = 30
   enable_cdn            = true
-
 
   log_config {
     enable        = true
@@ -61,4 +77,8 @@ resource "google_compute_backend_service" "wakapi_backend" {
 
   session_affinity                = "GENERATED_COOKIE"
   connection_draining_timeout_sec = 300
+  locality_lb_policy              = "RING_HASH"
+  consistent_hash {
+    minimum_ring_size = 1024
+  }
 }
