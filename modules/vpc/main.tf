@@ -1,7 +1,7 @@
 resource "google_compute_subnetwork" "wakapi_subnet" {
   name          = "wakapi-subnetwork"
-  ip_cidr_range = "10.2.0.0/20"
-  region        = "us-west1"
+  ip_cidr_range = var.wakapi_ip_cidr_range
+  region        = var.region
   network       = google_compute_network.wakapi_network.id
 }
 

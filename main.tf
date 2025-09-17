@@ -2,15 +2,6 @@ module "storage" {
   source = "./modules/storage"
 }
 
-module "vpc" {
-  source          = "./modules/vpc"
-  default_network = "projects/${var.project_id}/global/networks/default"
-}
-
-module "health_check" {
-  source = "./modules/health-check"
-}
-
 module "firewall" {
   source = "./modules/firewall"
 
@@ -18,8 +9,18 @@ module "firewall" {
   wakapi_vpc_network = module.vpc.wakapi_vpc_id
 }
 
+module "vpc" {
+  source = "./modules/vpc"
+
+  region          = var.region
+  default_network = "projects/${var.project_id}/global/networks/default"
+}
+
 module "compute" {
-  source          = "./modules/compute"
+  source = "./modules/compute"
+
+  zone            = var.zone
+  region          = var.region
   default_network = "projects/${var.project_id}/global/networks/default"
 
   startup_script_url = module.storage.gcloud_storage_start_script_url
@@ -31,10 +32,14 @@ module "compute" {
   service_account = var.service_account
 }
 
+module "health_check" {
+  source = "./modules/health-check"
+}
+
 module "load_balancer" {
   source = "./modules/load-balancer"
 
   unmig_group            = module.compute.unmig_instance_group
   wakapi_mig_group       = module.compute.wakapi_mig_instance_group
-  wakapi_health_check_id = module.health_check.wakapi_hc_id
+  wakapi_health_check_id = module.health_check.wakapi_health_check_id
 }

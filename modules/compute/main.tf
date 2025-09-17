@@ -1,6 +1,6 @@
 resource "google_compute_autoscaler" "default" {
   name   = "wakapi-autoscaler"
-  zone   = "us-west1-a"
+  zone   = var.zone
   target = google_compute_instance_group_manager.wakapi_mig.id
 
   autoscaling_policy {
@@ -19,7 +19,7 @@ resource "google_compute_instance_template" "wakapi_template" {
   description = "This template is used to create wakapi server instances."
 
   machine_type         = "e2-micro"
-  region               = "us-west1"
+  region               = var.region
   tags                 = ["http-server"]
   can_ip_forward       = false
   instance_description = "description assigned to instances"
@@ -48,7 +48,7 @@ resource "google_compute_instance_template" "wakapi_template" {
 
 resource "google_compute_instance_group_manager" "wakapi_mig" {
   name = "wakapi-mig"
-  zone = "us-west1-a"
+  zone = var.zone
 
   target_size        = 2
   base_instance_name = "wakapi"
@@ -65,7 +65,7 @@ resource "google_compute_instance_group_manager" "wakapi_mig" {
 
 resource "google_compute_instance_group" "unmanaged" {
   name    = "un-mig"
-  zone    = "us-west1-a"
+  zone    = var.zone
   network = var.default_network
 
   instances = [google_compute_instance.wakapi_unmagend_instance.id]

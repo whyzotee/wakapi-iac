@@ -1,3 +1,13 @@
+variable "region" {
+  type        = string
+  description = "Project region."
+}
+
+variable "zone" {
+  type        = string
+  description = "Project zone."
+}
+
 variable "default_network" {
   type        = string
   description = "default network url"

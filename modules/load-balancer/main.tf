@@ -8,7 +8,7 @@ resource "google_compute_global_forwarding_rule" "wakapi_lb_frontend" {
   port_range  = "80"
 
   target     = google_compute_target_http_proxy.wakapi_lb_http_proxy.id
-  ip_address = ""
+  ip_address = "" // Do not delete, it's auto generate public ipv4.
 }
 
 resource "google_compute_target_http_proxy" "wakapi_lb_http_proxy" {
@@ -26,7 +26,7 @@ resource "google_compute_global_forwarding_rule" "wakapi_lb_frontend_ipv6" {
   port_range  = "80"
 
   target     = google_compute_target_http_proxy.wakapi_lb_http_proxy_ipv6.id
-  ip_address = "" # ให้เอา ip จาก google
+  ip_address = "" // Do not delete, it's auto generate public ipv6.
 }
 
 resource "google_compute_target_http_proxy" "wakapi_lb_http_proxy_ipv6" {
@@ -78,6 +78,7 @@ resource "google_compute_backend_service" "wakapi_backend" {
   session_affinity                = "GENERATED_COOKIE"
   connection_draining_timeout_sec = 300
   locality_lb_policy              = "RING_HASH"
+
   consistent_hash {
     minimum_ring_size = 1024
   }
