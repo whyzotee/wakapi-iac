@@ -1,4 +1,6 @@
-# Wakapi IaC 🚀
+# 🚀 Wakapi IaC 
+> Available on October 17 (Assignment due date)
+
 As an assignment for the course *Introduction to Cloud Architecture*, this project focuses on the implementation of **Infrastructure as Code (IaC)** and can automatically set up **Wakapi** and deploy it on **Google Cloud Platform** with **Neon (PostgreSQL)** as the database.
 
 Features
