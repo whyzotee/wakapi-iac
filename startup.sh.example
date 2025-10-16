@@ -1,10 +1,56 @@
 #! /bin/bash
 
 apt-get update
-apt-get install nginx unzip -y
+apt-get install unzip -y
 
-mkdir opt/wakapi && cd $_
+# Install Wakapi and config
+mkdir /opt/wakapi && cd $_
 
 curl -L https://wakapi.dev/get | bash
 
-echo "ไม่บอก หลอกให้งง"
+HOST=""
+PORT=""
+USER=""
+PASSWORD=""
+DB_NAME=""
+
+sed -i -e "/server:/,/^[^ ]/s/listen_ipv4:.*/listen_ipv4: 0.0.0.0/" \
+    -e "/server:/,/^[^ ]/s/listen_ipv6:.*/listen_ipv6: '-'/" \
+    -e "/server:/,/^[^ ]/s/port:.*/port: 80/" \
+    -e "/db:/,/^[^ ]/s/host:.*/host: $HOST/" \
+    -e "/db:/,/^[^ ]/s/port:.*/port: $PORT/" \
+    -e "/db:/,/^[^ ]/s/user:.*/user: $USER/" \
+    -e "/db:/,/^[^ ]/s/password:.*/password: $PASSWORD/" \
+    -e "/db:/,/^[^ ]/s/name:.*/name: $DB_NAME/" \
+    -e "/db:/,/^[^ ]/s/dialect:.*/dialect: postgres/" \
+    -e "/db:/,/^[^ ]/s/ssl:.*/ssl: true/" \
+    -e "/mail:/,/^[^ ]/s/enabled:.*/enabled: false/" \
+    config.yml
+
+# Setup Wakapi Service
+cat << EOF > /etc/systemd/system/wakapi.service
+# /etc/systemd/system/wakapi.service
+[Unit]
+Description=Wakapi Web App
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/opt/wakapi/wakapi
+WorkingDirectory=/opt/wakapi/
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl start wakapi
+systemctl enable wakapi
+
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+bash add-google-cloud-ops-agent-repo.sh --also-install
+rm ./add-google-cloud-ops-agent-repo.sh
+
+apt-get update

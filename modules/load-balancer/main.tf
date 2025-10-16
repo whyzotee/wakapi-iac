@@ -16,24 +16,6 @@ resource "google_compute_target_http_proxy" "wakapi_lb_http_proxy" {
   url_map = google_compute_url_map.wakapi_lb.id
 }
 
-resource "google_compute_global_forwarding_rule" "wakapi_lb_frontend_ipv6" {
-  name = "wakapi-frontend-ipv6"
-
-  load_balancing_scheme = "EXTERNAL_MANAGED"
-
-  ip_protocol = "TCP"
-  ip_version  = "IPV6"
-  port_range  = "80"
-
-  target     = google_compute_target_http_proxy.wakapi_lb_http_proxy_ipv6.id
-  ip_address = "" // Do not delete, it's auto generate public ipv6.
-}
-
-resource "google_compute_target_http_proxy" "wakapi_lb_http_proxy_ipv6" {
-  name    = "wakapi-lb-http-proxy-ipv6"
-  url_map = google_compute_url_map.wakapi_lb.id
-}
-
 resource "google_compute_url_map" "wakapi_lb" {
   name            = "wakapi-lb"
   default_service = google_compute_backend_service.wakapi_backend.id

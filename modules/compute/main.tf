@@ -9,7 +9,7 @@ resource "google_compute_autoscaler" "default" {
     cooldown_period = 60
 
     cpu_utilization {
-      target = 0.6
+      target = 0.8
     }
   }
 }
